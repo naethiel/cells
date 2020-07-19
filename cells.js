@@ -40,47 +40,76 @@ function lifecycle(initialState, cycles) {
 }
 
 
-const tests = [
-    {
-        label: "it should work for the most basic of setups",
-        initialState: [0],
-        cycles: 1,
-        finalState: "0"
-    },
-    {
-        label: "it should match the given example case",
-        initialState: [1, 1, 0, 1],
-        cycles: 2,
-        finalState: "0,0,0,0"
-    },
-    {
-        label: "it should properly turn cells to 1 when only one of the neighbor cells was 1 at the previous cycle",
-        initialState: [0, 0, 1, 1],
-        cycles: 1,
-        finalState: "1,1,1,1"
-    },
-    {
-        label: "it should properly turn cells to 0 when both neighbor cells were 1 at the previous cycle",
-        initialState: [1, 1, 1, 1],
-        cycles: 1,
-        finalState: "0,0,0,0"
-    },
-    {
-        label: "it should stay constant if all cells are 0",
-        initialState: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        cycles: 10,
-        finalState: "0,0,0,0,0,0,0,0,0"
-    }
+const tests = [{
+    label: "it should throw if initialState is invalid",
+    initialState: {},
+    cycles: 1,
+    finalState: "invalid input parameter"
+},
+{
+    label: "it should throw if cycles are invalid",
+    initialState: [0, 1, 0],
+    cycles: "somehting",
+    finalState: "invalid input parameter"
+},
+{
+    label: "it should throw if initalState contains invalid cells",
+    initialState: [0, 1, 0, 'stuff'],
+    cycles: 5,
+    finalState: "Cells array is not valid"
+},
+{
+    label: "it should throw if cycles is 0",
+    initialState: [0, 1, 0],
+    cycles: 0,
+    finalState: "invalid input parameter"
+},
+{
+    label: "it should work for the most basic of setups",
+    initialState: [0],
+    cycles: 1,
+    finalState: "0"
+},
+{
+    label: "it should match the given example case",
+    initialState: [1, 1, 0, 1],
+    cycles: 2,
+    finalState: "0,0,0,0"
+},
+{
+    label: "it should properly turn cells to 1 when only one of the neighbor cells was 1 at the previous cycle",
+    initialState: [0, 0, 1, 1],
+    cycles: 1,
+    finalState: "1,1,1,1"
+},
+{
+    label: "it should properly turn cells to 0 when both neighbor cells were 1 at the previous cycle",
+    initialState: [1, 1, 1, 1],
+    cycles: 1,
+    finalState: "0,0,0,0"
+},
+{
+    label: "it should stay constant if all cells are 0",
+    initialState: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    cycles: 10,
+    finalState: "0,0,0,0,0,0,0,0,0"
+}
 ]
 
 tests.forEach(test => {
-    const result = lifecycle(test.initialState, test.cycles);
+    let result;
 
-    console.log("\n" + test.label)
+    try {
+        result = lifecycle(test.initialState, test.cycles);
+    } catch (error) {
+        result = error.message;
+    }
+
+    console.log(test.label)
     if (result === test.finalState) {
-        console.log("OK")
+        console.log("OK\n")
     } else {
         console.error("FAIL");
-        console.log(`got ${result} - expected ${test.finalState}`)
+        console.log(`got ${result} - expected ${test.finalState}\n`)
     }
 })
